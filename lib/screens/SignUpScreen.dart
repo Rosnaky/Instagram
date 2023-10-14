@@ -1,11 +1,19 @@
+import "dart:io";
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:http/http.dart" as http;
 import "package:image_picker/image_picker.dart";
+import "package:instagram_flutter/responsive/MobileLayout.dart";
+import "package:instagram_flutter/responsive/ResponsiveLayoutTheme.dart";
+import "package:instagram_flutter/responsive/WebLayout.dart";
+import "package:instagram_flutter/screens/LoginScreen.dart";
 import "package:instagram_flutter/utils/Colours.dart";
 import "package:instagram_flutter/utils/Utils.dart";
 import "package:instagram_flutter/widgets/TextFieldInput.dart";
+
+import 'package:instagram_flutter/utils/Values.dart';
 
 import "../resources/AuthMethods.dart";
 
@@ -45,10 +53,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
+  getDefaultImage() async {
+    final imageUrl = Uri.parse(
+        "static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg");
+    final http.Response response = await http.get(imageUrl);
+    setState(() {
+      _img = response.bodyBytes;
+    });
+  }
+
   signUpUser() async {
+    if (_img == null) {
+      await getDefaultImage();
+    }
     setState(() {
       _isLoading = true;
     });
+
     String res = await AuthMethods().signUpUser(
       email: emailTextEditingController.text,
       password: passwordTextEditingController.text,
@@ -58,10 +79,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
     if (res != "Success") {
       showSnackBar(context, res);
+    } else {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+              mobileLayout: MobileLayout(), webLayout: WebLayout())));
     }
     setState(() {
       _isLoading = false;
     });
+  }
+
+  void navigateToLoginScreen() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const LoginScreen(),
+    ));
   }
 
   @override
@@ -85,15 +116,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             // circular widget to accept and show our selected file
             Stack(children: [
-              _img != null
+              _img != null && _img! != defaultImageIntArray
                   ? CircleAvatar(
                       radius: 64,
                       backgroundImage: MemoryImage(_img!),
                     )
                   : CircleAvatar(
                       radius: 64,
-                      backgroundImage: const NetworkImage(
-                          "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"),
+                      backgroundImage: MemoryImage(defaultImageIntArray),
                     ),
               Positioned(
                   bottom: -10,
@@ -172,15 +202,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 Container(
                   child: Text(
-                    "Don't have an account? ",
+                    "Already have an account? ",
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 8),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: navigateToLoginScreen,
                   child: Container(
                     child: Text(
-                      "Sign up",
+                      "Log in",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 8),

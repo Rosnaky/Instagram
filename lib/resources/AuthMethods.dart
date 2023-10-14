@@ -25,7 +25,7 @@ class AuthMethods {
             .createUserWithEmailAndPassword(email: email, password: password);
 
         print(userCredential.user!.uid);
-
+        print(file);
         String url = await StorageMethods().uploadImage(
           "profilePics",
           file,
@@ -50,6 +50,33 @@ class AuthMethods {
         res = 'The account already exists for that email.';
       } else if (e.code == 'invalid-email') {
         res = 'The email address is not valid.';
+      }
+    } catch (e) {
+      res = e.toString();
+    }
+
+    return res;
+  }
+
+  Future<String> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    String res = "Some error occured";
+    try {
+      if (email.isNotEmpty || password.isNotEmpty) {
+        await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+        res = "Success";
+      } else {
+        res = "Email or password cannot be empty";
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      if (e.code == 'invalid-login-credentials') {
+        res = 'Wrong password or email';
+      } else if (e.code == "invalid-email") {
+        res = "Invalid email";
       }
     } catch (e) {
       res = e.toString();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_flutter/utils/Dimensions.dart';
+import 'package:instagram_flutter/utils/Values.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget mobileLayout;

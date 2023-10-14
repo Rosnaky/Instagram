@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:instagram_flutter/screens/LoginScreen.dart';
 import 'package:instagram_flutter/screens/SignUpScreen.dart';
@@ -29,8 +30,29 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.dark().copyWith(
           scaffoldBackgroundColor: mobileBackgroundColor,
         ),
-        // home: ResponsiveLayout(
-        //     mobileLayout: MobileLayout(), webLayout: WebLayout()),
-        home: SignUpScreen());
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.userChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.hasData) {
+                return const ResponsiveLayout(
+                    mobileLayout: MobileLayout(), webLayout: WebLayout());
+              } else if (snapshot.hasError) {
+                return const Center(
+                  child: Text("Something went wrong"),
+                );
+              }
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: primaryColor,
+                ),
+              );
+            }
+
+            return const LoginScreen();
+          },
+        ));
   }
 }
