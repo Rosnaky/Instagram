@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_flutter/providers/userProvider.dart';
+import 'package:instagram_flutter/providers/UserProvider.dart';
 import 'package:instagram_flutter/utils/Values.dart';
 import 'package:provider/provider.dart';
 
@@ -22,8 +22,8 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   }
 
   addData() async {
-    UserProvider _userProvider = Provider.of(context, listen: false);
-    await _userProvider.refreshUser();
+    UserProvider userProvider = Provider.of(context, listen: false);
+    await userProvider.refreshUser();
   }
 
   @override
