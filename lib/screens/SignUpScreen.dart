@@ -35,6 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       TextEditingController();
   Uint8List? _img;
   bool _isLoading = false;
+  MemoryImage defaultImage = MemoryImage(defaultImageIntArray);
 
   @override
   void dispose() {
@@ -123,7 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     )
                   : CircleAvatar(
                       radius: 64,
-                      backgroundImage: MemoryImage(defaultImageIntArray),
+                      backgroundImage: defaultImage,
                     ),
               Positioned(
                   bottom: -10,
