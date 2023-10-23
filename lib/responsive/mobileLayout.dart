@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:instagram_flutter/models/user.dart';
 import 'package:instagram_flutter/providers/UserProvider.dart';
 import 'package:instagram_flutter/utils/Colours.dart';
+import 'package:instagram_flutter/utils/Values.dart';
 import 'package:provider/provider.dart';
+import 'package:instagram_flutter/utils/Values.dart';
 
 class MobileLayout extends StatefulWidget {
   const MobileLayout({Key? key}) : super(key: key);
@@ -44,16 +46,10 @@ class _MobileLayoutState extends State<MobileLayout> {
 
     return Scaffold(
       body: PageView(
-        children: [
-          Text("home"),
-          Text("seach"),
-          Text("feed"),
-          Text("favourites"),
-          Text("profile"),
-        ],
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         onPageChanged: onPageChanged,
+        children: homeScreenItems,
       ),
       bottomNavigationBar: CupertinoTabBar(
         backgroundColor: mobileBackgroundColor,

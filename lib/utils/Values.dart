@@ -1,8 +1,16 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:instagram_flutter/screens/AddPostScreen.dart';
 
 const webScreenSize = 600;
+
+const homeScreenItems = [Text("home"),
+          Text("seach"),
+          AddPostScreen(),
+          Text("favourites"),
+          Text("profile"),];
+
 Uint8List defaultImageIntArray = Uint8List.fromList([
   255,
   216,
